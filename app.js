@@ -8,6 +8,7 @@ var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var passport = require('passport');
 var authenticate = require('./authenticate');
+var config = require('./config');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -21,7 +22,7 @@ mongoose.Promise = require('bluebird');
 const Dishes = require('./models/dishes');
 
 // Connection URL
-const url = 'mongodb://bautest:bau0099@ds145146.mlab.com:45146/confusion';
+const url = config.mongoUrl;
 const connect = mongoose.connect(url, {
     useMongoClient: true,
     /* other options */
@@ -44,21 +45,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 /* app.use(cookieParser('12345-67890-09876-54321')); */
 
-app.use(session({
+/* app.use(session({
   name : 'session-id',
   secret: '123456-123456',
   saveUninitialized: false,
   resave: false,
   store: new FileStore()
-}))
+})) */
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-function auth (req, res, next) {
+/* function auth (req, res, next) {
     console.log(req.session);
 
   if(!req.user) {
@@ -71,7 +71,7 @@ function auth (req, res, next) {
   }
 }
 
-app.use(auth);
+app.use(auth); */
 
 app.use(express.static(path.join(__dirname, 'public')));
 
